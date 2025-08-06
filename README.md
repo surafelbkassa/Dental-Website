@@ -1,64 +1,112 @@
-# Dental-Website
-Dental Website and dahsbboard 
-backend/
-├── cmd/
-│   └── main.go               # Entry point
-├── config/
-│   └── config.go             # Env & config loading
-├── controllers/              # HTTP handlers
-│   └── appointment.go
-│   └── patient.go
-│   └── auth.go
-├── services/                 # Business logic
-│   └── appointment_service.go
-│   └── patient_service.go
-├── models/                   # DB models
-│   └── appointment.go
-│   └── user.go
-├── repositories/             # DB operations
-│   └── appointment_repo.go
-│   └── user_repo.go
-├── middleware/
-│   └── auth.go               # JWT, logging
-├── utils/
-│   └── hash.go               # Helper functions
-├── routes/
-│   └── routes.go             # Route registration
-├── database/
-│   ├── migration.sql         # Init schema
-│   └── seed.sql              # Sample data
-├── go.mod
-└── Dockerfile
-frontend/
-├── public/
-│   └── index.html
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   └── Sidebar.tsx
-│   │   └── Navbar.tsx
-│   ├── features/
-│   │   ├── appointments/
-│   │   │   ├── AppointmentTable.tsx
-│   │   │   └── appointmentSlice.ts
-│   │   ├── auth/
-│   │   │   ├── Login.tsx
-│   │   │   └── authSlice.ts
-│   ├── pages/
-│   │   ├── Dashboard.tsx
-│   │   ├── Patients.tsx
-│   ├── services/
-│   │   └── api.ts             # Axios instance
-│   ├── hooks/
-│   │   └── useAuth.ts
-│   ├── App.tsx
-│   └── main.tsx
-├── tailwind.config.js
-├── vite.config.ts
-├── package.json
-└── Dockerfile
-infra/
-├── docker-compose.yml        # DB + App
-├── nginx.conf                # Optional reverse proxy
-├── .env                      # Environment variables
+# 🦷 Dental Clinic Dashboard – Client Management App
 
+A modern, full-stack dental clinic management dashboard that helps dental offices keep track of patients, payments, and upcoming visits. Built with **React + Node.js** and styled for clean usability. Designed for clinics that need fast, intuitive, and scalable patient/client tracking.
+
+---
+
+## 🚀 Features
+
+- 👨‍⚕️ View and manage dental clients
+- ✏️ Inline editing of name, phone, payment status, and next appointment
+- ➕ Add new clients easily via modal form
+- 🗑 Delete client records
+- 💰 Track unpaid amounts
+- 📅 Monitor upcoming visits
+- ⚡ Fast and responsive (Vite + Bootstrap)
+
+---
+
+## 🛠 Tech Stack
+
+| Frontend      | Backend       | Database     |
+|---------------|---------------|--------------|
+| React (Vite)  | Node.js (Express) | MongoDB (Mongoose) |
+
+---
+
+## 📸 Screenshots
+
+> *(Add screenshots here for visual appeal)*  
+> Drag and drop or paste images of:  
+> - Dashboard with client list  
+> - Edit modal  
+> - Add client modal  
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/surafelbkassa/dental-dashboard.git
+cd dental-dashboard
+````
+
+### 2. Setup Backend
+
+```bash
+cd Backend
+npm install
+touch .env
+```
+
+> Fill `.env` with:
+
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+```
+
+Start backend:
+
+```bash
+nodemon server.js
+```
+
+### 3. Setup Frontend
+
+```bash
+cd ../Frontend
+npm install
+npm run dev
+```
+
+---
+
+## ✅ Functionality
+
+* Fully responsive client dashboard
+* CRUD operations (Create, Read, Update, Delete)
+* API-connected frontend
+* Error handling and validation
+* Bootstrap modals and forms
+* Smooth UX (no full page reloads)
+
+---
+
+##  Why This Matters
+
+This is a real-world project for managing dental clinic operations—an ideal freelance SaaS MVP. With slight tweaks, it can serve:
+
+* Dental and medical clinics
+* Small businesses needing client tracking
+* Freelancers building admin tools
+
+---
+
+## 🤝 Hire Me
+
+I'm available for freelance and contract work.
+
+**💼 Upwork Profile:** \[Insert your Upwork link]
+**📫 Email:** \[surafelbkassa3@gmail.com]
+
+
+---
+
+## 🪪 License
+
+MIT – feel free to fork and build upon it.
+
+```
