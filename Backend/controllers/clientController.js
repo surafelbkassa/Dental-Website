@@ -33,16 +33,6 @@ exports.addClient = async (req, res) => {
   }
 };
 
-// Get all clients
-exports.getClients = async (req, res) => {
-  try {
-    const clients = await Client.find();
-    res.json(clients);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
 // Get one client
 exports.getClient = async (req, res) => {
   try {
@@ -54,6 +44,27 @@ exports.getClient = async (req, res) => {
   }
 };
 
+// Get all clients
+exports.getClients = async (req, res) => {
+  try {
+    const clients = await Client.find();
+
+    const formatted = clients.map(client => {
+      const totalPaid = client.payments.reduce((sum, p) => sum + p.amount, 0);
+      const remaining = client.totalBill - totalPaid;
+
+      return {
+        ...client._doc,
+        totalPaid,
+        remaining
+      };
+    });
+
+    res.json(formatted);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 // Add a visit
 exports.addVisit = async (req, res) => {
   try {
@@ -70,7 +81,15 @@ exports.addVisit = async (req, res) => {
 exports.addPayment = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
-    client.payments.push(req.body);
+    if (!client) return res.status(404).json({ message: 'Client not found' });
+
+    // Create the payment object
+    const payment = {
+      date: new Date(),
+      amount: req.body.amount  // <- no parentheses, just the value
+    };
+
+    client.payments.push(payment);
     await client.save();
     res.json(client);
   } catch (err) {

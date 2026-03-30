@@ -6,7 +6,7 @@ function Dashboard() {
   const [clients, setClients] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editingClient, setEditingClient] = useState(null);
-  const [newClient, setNewClient] = useState({ name: '', phone: '', unpaidAmount: '', nextVisit: '' });
+  const [newClient, setNewClient] = useState({ name: '', phone: '', totalBill: '', nextVisit: '' });
   const [toastMsg, setToastMsg] = useState('');
 
   useEffect(() => {
@@ -55,10 +55,27 @@ function Dashboard() {
     try {
       const res = await axios.post(`http://localhost:5000/api/clients`, newClient);
       setClients([...clients, res.data]);
-      setNewClient({ name: '', phone: '', unpaidAmount: '', nextVisit: '' });
+      setNewClient({ name: '', phone: '', totalBill: '', nextVisit: '' });
       showToast("✅ New client added!");
     } catch {
       showToast("❌ Failed to add client.");
+    }
+  };
+
+  const handleAddPayment = async (clientId) => {
+    const amount = prompt("Enter payment amount:");
+
+    if (!amount || isNaN(amount)) return;
+
+    try {
+      await axios.post(`http://localhost:5000/api/clients/${clientId}/payments`, {
+        amount: Number(amount)
+      });
+
+      fetchClients(); // refresh data
+      showToast("Payment added!");
+    } catch {
+      showToast("❌ Failed to add payment");
     }
   };
 
@@ -76,7 +93,7 @@ function Dashboard() {
             <Form.Control placeholder="Phone" value={newClient.phone} onChange={e => setNewClient({ ...newClient, phone: e.target.value })} required />
           </div>
           <div className="col-md">
-            <Form.Control placeholder="Unpaid Amount" type="number" value={newClient.unpaidAmount} onChange={e => setNewClient({ ...newClient, unpaidAmount: e.target.value })} />
+            <Form.Control placeholder="Total_bill" type="number" value={newClient.totalBill} onChange={e => setNewClient({ ...newClient, totalBill: e.target.value })} />
           </div>
           <div className="col-md">
             <Form.Control type="date" value={newClient.nextVisit} onChange={e => setNewClient({ ...newClient, nextVisit: e.target.value })} />
@@ -94,7 +111,9 @@ function Dashboard() {
             <tr>
               <th>Name</th>
               <th>Phone</th>
-              <th>Unpaid</th>
+              <th>Total Bill</th>
+              <th>Paid</th>
+              <th>Remaining</th>
               <th>Next Visit</th>
               <th>Actions</th>
             </tr>
@@ -104,11 +123,16 @@ function Dashboard() {
               <tr key={client._id}>
                 <td>{client.name}</td>
                 <td>{client.phone}</td>
-                <td className="text-danger">${client.unpaidAmount ?? 0}</td>
+                <td>${client.totalBill ?? 0}</td>
+                <td className="text-success">${client.totalPaid ?? 0}</td>
+                <td className="text-danger">${client.remaining ?? 0}</td>
                 <td>{client.nextVisit ? new Date(client.nextVisit).toLocaleDateString() : 'N/A'}</td>
                 <td>
-                  <Button variant="link" size="sm" onClick={() => handleEdit(client)}>✏️</Button>
-                  <Button variant="link" size="sm" onClick={() => handleDelete(client._id)}>🗑️</Button>
+                  <td>
+                    <Button variant="link" size="sm" onClick={() => handleEdit(client)}>✏️</Button>
+                    <Button variant="link" size="sm" onClick={() => handleDelete(client._id)}>🗑️</Button>
+                    <Button variant="link" size="sm" onClick={() => handleAddPayment(client._id)}>💰</Button>
+                  </td>
                 </td>
               </tr>
             ))}
@@ -132,8 +156,8 @@ function Dashboard() {
               <Form.Control value={editingClient?.phone || ''} onChange={e => setEditingClient({ ...editingClient, phone: e.target.value })} />
             </Form.Group>
             <Form.Group className="mb-2">
-              <Form.Label>Unpaid Amount</Form.Label>
-              <Form.Control type="number" value={editingClient?.unpaidAmount || ''} onChange={e => setEditingClient({ ...editingClient, unpaidAmount: e.target.value })} />
+              <Form.Label>totalBill </Form.Label>
+              <Form.Control type="number" value={editingClient?.totalBill || ''} onChange={e => setEditingClient({ ...editingClient, totalBill: e.target.value })} />
             </Form.Group>
             <Form.Group>
               <Form.Label>Next Visit</Form.Label>

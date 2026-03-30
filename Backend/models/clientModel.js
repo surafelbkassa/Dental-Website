@@ -14,12 +14,14 @@ const paymentSchema = new mongoose.Schema({
 const clientSchema = new mongoose.Schema({
   name: { type: String, required: true },
   phone: { type: String, required: true },
+  totalBill: { type: Number, default: 0 },
+  payments: [paymentSchema],
   unpaidAmount: { type: Number, default: 0 },
+  visits: [visitSchema],
   nextVisit: { type: Date }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Client', clientSchema);
-
 
 
 
